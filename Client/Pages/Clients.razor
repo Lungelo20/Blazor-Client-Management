@@ -1,0 +1,64 @@
+﻿@page "/clients"
+@inject IClientDetailService ClientDetailService
+@inject NavigationManager NavMang
+
+<PageTitle>Client Details</PageTitle>
+<h3>Client Details</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Names</th>
+            <th>Gender</th>
+            <th>Status</th>
+            <th>Contacts</th>
+            <th>Addresses</th>
+            <th>Manage</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+            @foreach(var client in ClientDetailService.ClientDetail)
+            {
+                <tr>
+                    <td>@client.Name</td>
+                    <td>@client.Gender</td>
+                <td>
+                    @if (client.Status == 1)
+                    {
+                        <label class="alert-primary">&nbsp; Active &nbsp;</label>
+                    }
+                    else
+                    {
+                        <label class="alert-danger">&nbsp; Deactived &nbsp;</label>
+                    }
+                </td>
+                    <td>@client.Contacts.Count</td>
+                    <td>@client.Addresses.Count</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="(() => ViewClient(client.Id))"><i class="oi oi-pencil"></i></button>
+                     </td>
+                </tr>
+            }
+        
+    </tbody>   
+</table>
+<br />
+<button class="btn btn-primary" @onclick="AddClient">Add New Client</button>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ClientDetailService.GetAllClients();
+    }
+
+    void ViewClient(int id)
+    {
+        NavMang.NavigateTo($"client/{id}");
+    }
+    void AddClient()
+    {
+        NavMang.NavigateTo("/client");
+    }
+}
